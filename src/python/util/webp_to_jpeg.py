@@ -1,0 +1,77 @@
+#!/usr/bin/env python3
+
+# Copyright (c) 2024, xiaominghe2014@gmail.com
+# All rights reserved.
+
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+
+# 1. Redistributions of source code must retain the above copyright notice,
+#    this list of conditions and the following disclaimer.
+
+# 2. Redistributions in binary form must reproduce the above copyright notice,
+#    this list of conditions and the following disclaimer in the documentation
+#    and/or other materials provided with the distribution.
+
+# 3. Neither the name of the copyright holder nor the names of its contributors
+#    may be used to endorse or promote products derived from this software
+#    without specific prior written permission.
+
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+# CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+# ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
+
+import os
+import sys
+
+from PIL import Image
+
+def webp_to_jpeg(source, target):
+    print(f'将{source}转换为{target}')
+    """
+    将webp图片格式转换为jpeg格式。
+    
+    参数:
+    source (str): 源webp图片的路径。
+    target (str): 目标jpeg图片的保存路径。
+    """
+    # 使用Pillow库打开webp图片
+    image = Image.open(source)
+    # 将图片转换为jpeg格式并保存
+    image.convert('RGB').save(target, 'jpeg')
+
+# 查找指定目录下的所有webp格式图片
+def find_webp_images(directory):
+    """
+    查找指定目录下的所有webp格式图片。
+
+    参数:
+    directory (str): 要搜索的目录路径。
+
+    返回:
+    list: 找到的webp图片文件的路径列表。
+    """
+    webp_images = []
+    # 遍历指定目录及其子目录
+    for root, dirs, files in os.walk(directory):
+        for file in files:
+            # 检查文件扩展名是否为webp
+            if file.endswith('.webp'):
+                # 将找到的webp图片路径添加到列表中
+                webp_images.append(os.path.join(root, file))
+    return webp_images
+
+print(f'查找指定目录{sys.argv[1]}下的所有webp格式图片')
+webp_images = find_webp_images(sys.argv[1])
+for webp_image in webp_images:
+    jpeg_image = webp_image.replace('.webp', '.jpeg')
+    webp_to_jpeg(webp_image, jpeg_image)
+
