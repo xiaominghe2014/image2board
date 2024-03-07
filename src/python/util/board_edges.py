@@ -69,9 +69,11 @@ def board_tetect(image_path, save_dir):
         x1, y1, x2, y2 = line[0]
         cv2.line(image, (x1, y1), (x2, y2), (0, 255, 0), 2)
 
+
     for line in vertical_lines:
         x1, y1, x2, y2 = line[0]
-        cv2.line(image, (x1, y1), (x2, y2), (0, 0, 255), 2)
+        cv2.line(image, (x1, y1), (x2, y2), (0, 255, 0), 2)
+        
     
     # 高斯模糊
     # blur = cv2.GaussianBlur(gray,(5,5),0)
