@@ -42,7 +42,13 @@ def file_to_save_path(image_path,save_dir):
 def board_tetect(image_path, save_dir):
     # 读取图片
     image = cv2.imread(image_path)
-    
+    # 将图片缩放到宽为800
+    # scale_percent = 800 / image.shape[1]
+    # width = int(image.shape[1] * scale_percent)
+    # height = int(image.shape[0] * scale_percent)
+    # dim = (width, height)
+    # image = cv2.resize(image, dim, interpolation = cv2.INTER_AREA)
+
     # 转换为灰度图
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         
@@ -181,5 +187,6 @@ def find_jpeg_images(directory):
 print(f'指定目录{sys.argv[1]} 棋盘检测到 {sys.argv[2]}')
 jpeg_images = find_jpeg_images(sys.argv[1])
 for jpeg_image in jpeg_images:
+    print(f'处理 {jpeg_image}')
     board_tetect(jpeg_image,sys.argv[2])
     # increase_contrast(jpeg_image,sys.argv[2])
