@@ -108,7 +108,7 @@ def find_jpeg_images(directory):
     返回:
     list: 找到的图片文件的路径列表。
     """
-    imgaes = []
+    images = []
     # 遍历指定目录及其子目录
     for root, dirs, files in os.walk(directory):
         for file in files:
