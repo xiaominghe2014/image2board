@@ -46,6 +46,27 @@ def board_tetect(image_path, save_dir):
     # 转换为灰度图
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         
+    # 霍夫变换找到棋盘上的线条
+    lines = cv2.HoughLinesP(cv2.Canny(gray, 50, 150, apertureSize=3), 1, np.pi / 180, 100, minLineLength=100, maxLineGap=10)
+
+    horizontal_lines = []
+    vertical_lines = []
+
+    if lines is not None:
+        for line in lines:
+            x1, y1, x2, y2 = line[0]
+            if x1 == x2:
+                vertical_lines.append(line)
+            elif y1 == y2:
+                horizontal_lines.append(line)
+    for line in horizontal_lines:
+        x1, y1, x2, y2 = line[0]
+        cv2.line(image, (x1, y1), (x2, y2), (0, 255, 0), 2)
+
+    for line in vertical_lines:
+        x1, y1, x2, y2 = line[0]
+        cv2.line(image, (x1, y1), (x2, y2), (0, 0, 255), 2)
+    
     # 高斯模糊
     # blur = cv2.GaussianBlur(gray,(5,5),0)
 
@@ -65,23 +86,7 @@ def board_tetect(image_path, save_dir):
     # 轮廓提取
     contours, _ = cv2.findContours(erosion, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-    # TODO 找到最大的轮廓，即棋盘的轮廓---由于有棋子的遮挡。这样有问题
-    # max_area = 0
-    # max_contour = None
-    # for contour in contours:
-    #     area = cv2.contourArea(contour)
-    #     if area > max_area:
-    #         max_area = area
-    #         max_contour = contour
-    
-    #找到最小外界矩阵，即棋盘的4个角
-    # rect = cv2.minAreaRect(max_contour)
-    # box = cv2.boxPoints(rect)
-    # box = np.intp(box)
-    # cv2.drawContours(image, [box], 0, (0, 0, 255), 2)
-
-    # width = int(rect[1][0])
-    # height = int(rect[1][1])
+   
 
     # 根据黑白颜色分别设置阈值，得到两个二值图像
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
@@ -112,7 +117,6 @@ def board_tetect(image_path, save_dir):
     
     print('circles:',len(circles))
     for i in circles:
-        print('i',i)
         # 圆心
         cx = int(i[0])
         cy = int(i[1])
